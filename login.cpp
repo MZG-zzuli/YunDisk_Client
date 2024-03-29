@@ -33,5 +33,8 @@ Login::Login(QWidget *parent)
     connect(dl,&mainLogin::regWid,[&]{
         stackWid->setCurrentIndex(regid);
     });
+    connect(reg,&regist::success,[&]{
+        stackWid->setCurrentIndex(dlid);
+    });
 
 }

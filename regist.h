@@ -19,10 +19,9 @@ public:
     explicit regist(QWidget *parent = nullptr);
 
 signals:
-
+    void success();
 public slots:
     void zhuce();
-
 private:
     Login* fu;
     QLineEdit* name;

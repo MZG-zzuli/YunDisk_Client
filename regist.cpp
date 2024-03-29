@@ -1,9 +1,11 @@
 ﻿#include "regist.h"
-
-
+#include<QJsonObject>
+#include<QJsonDocument>
+#include<QNetWorkReply>
 regist::regist(QWidget *parent)
     : QWidget{parent}
 {
+    fu=(Login*)parent;
     QVBoxLayout* mainLayout=new QVBoxLayout;
     this->setLayout(mainLayout);
     mainLayout->setAlignment(Qt::AlignVCenter);
@@ -71,10 +73,6 @@ regist::regist(QWidget *parent)
     });
 
 
-
-
-
-
 }
 void regist::zhuce()
 {
@@ -89,16 +87,49 @@ void regist::zhuce()
     QString USER_REG   = "^[a-zA-Z0-9_@#-\\*]\\{3,16\\}$";
     regexp.setPattern(USER_REG);
     bool bl = regexp.exactMatch(userName);
-    if(bl == false)
-    {
-        QMessageBox::warning(this, "ERROR", "用户名格式不正确!");
-        return;
-    }
+//    if(bl == false)
+//    {
+//        QMessageBox::warning(this, "ERROR", "用户名格式不正确!");
+//        return;
+//    }
     QNetworkAccessManager* pManager = new QNetworkAccessManager(this);
     QNetworkRequest request;
+
     QString url = QString("http://%1:%2/reg").arg(fu->sz->ip->text()).arg(fu->sz->port->text());
     request.setUrl(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");    // 描述post数据的格式
+    /*
+        {
+            userName:xxxx,
+            nickName:xxx,
+            firstPwd:xxx,
+            phone:xxx,
+            email:xxx
+        }
+    */
+    QJsonObject obj;
+    obj.insert("username",userName);
+    obj.insert("nickName",nickName);
+    obj.insert("firstPwd",passwd);
+    obj.insert("phone",phonestr);
+    obj.insert("email",emailstr);
+
+    QJsonDocument doc(obj);
+    QByteArray json=doc.toJson();
+    QNetworkReply* reply=pManager->post(request,json);
+    connect(reply,&QNetworkReply::readyRead,this,[=]{
+        QByteArray all=reply->readAll();
+        QJsonDocument doc=QJsonDocument::fromJson(all);
+        QJsonObject reObj=doc.object();
+        QString status=reObj.value("code").toString();
+        qDebug()<<status;
+        if(status=="002")
+        {
+            QMessageBox::information(this, "注册成功", "注册成功，请登录");
+            fu->dl->setNamePs(userName,passwd);
+            emit success();
+        }
+    });
 
 
 }

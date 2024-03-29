@@ -43,3 +43,10 @@ mainLogin::mainLogin(QWidget *parent)
 
 
 }
+
+void mainLogin::setNamePs(QString name, QString ps)
+{
+    this->name->setText(name);
+    this->password->setText(ps);
+
+}
