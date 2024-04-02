@@ -4,9 +4,15 @@
 #include<QLabel>
 #include<QPushButton>
 #include<QDebug>
+#include<QJsonObject>
+#include<QJsonDocument>
+#include<QNetworkAccessManager>
+#include<QNetworkRequest>
+#include<QNetworkReply>
 mainLogin::mainLogin(QWidget *parent)
     : QWidget{parent}
 {
+    fu=(Login*)parent;
     name=new QLineEdit;
     password=new QLineEdit;
     password->setEchoMode(QLineEdit::Password);
@@ -32,7 +38,9 @@ mainLogin::mainLogin(QWidget *parent)
     QPushButton* zc=new QPushButton(QStringLiteral("注册"));
     connect(zc,&QPushButton::clicked,this,[this]{
         emit regWid();
-        qDebug()<<"===aaa==";
+    });
+    connect(dl,&QPushButton::clicked,[this]{
+        mylogin();
     });
 
     dlZc->addWidget(dl);
@@ -48,5 +56,39 @@ void mainLogin::setNamePs(QString name, QString ps)
 {
     this->name->setText(name);
     this->password->setText(ps);
+
+}
+
+void mainLogin::mylogin()
+{
+    QJsonObject jsonObj;
+    jsonObj.insert("user",this->name->text());
+    jsonObj.insert("pwd",this->password->text());
+    QJsonDocument doc(jsonObj);
+    QByteArray jsonByte=doc.toJson();
+    QNetworkAccessManager *netWorkmanage=new QNetworkAccessManager(this);
+    QString url=QString("http://%1:%2/login").arg(fu->sz->ip->text()).arg(fu->sz->port->text());
+    QNetworkRequest req;
+    req.setUrl(url);
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+    QNetworkReply* reply=netWorkmanage->post(req,jsonByte);
+    connect(reply,&QNetworkReply::readyRead,[=]{
+        QByteArray bytes=reply->readAll();
+        QJsonDocument doc=QJsonDocument::fromJson(bytes);
+        qDebug()<<doc.toJson()<<endl;
+        QJsonObject obj=doc.object();
+        QString code=obj.value("code").toString();
+        if(code=="000")
+        {
+            //qDebug()<<"登录成功";
+            emit successLogin();
+        }else
+        {
+            QMessageBox::information(this,"error","密码错误,登录失败");
+            return;
+        }
+
+    });
+
 
 }

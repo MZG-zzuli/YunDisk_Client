@@ -4,6 +4,7 @@ class regist;
 #include "regist.h"
 #include"title.h"
 #include"shezhi.h"
+class mainLogin;
 #include"mainlogin.h"
 #include<QVBoxLayout>
 #include<QDebug>

@@ -92,6 +92,11 @@ void regist::zhuce()
 //        QMessageBox::warning(this, "ERROR", "用户名格式不正确!");
 //        return;
 //    }
+    if(passwd!=confirmPwd)
+    {
+        QMessageBox::information(this,"ERROR",QStringLiteral("两次输入密码不一致!"));
+        return;
+    }
     QNetworkAccessManager* pManager = new QNetworkAccessManager(this);
     QNetworkRequest request;
 
@@ -123,12 +128,24 @@ void regist::zhuce()
         QJsonObject reObj=doc.object();
         QString status=reObj.value("code").toString();
         qDebug()<<status;
+        /*
+         * 002      成功
+         * 003      用户已存在
+         * 其他004   失败
+         */
         if(status=="002")
         {
             QMessageBox::information(this, "注册成功", "注册成功，请登录");
             fu->dl->setNamePs(userName,passwd);
             emit success();
+        }else if(status=="003")
+        {
+            QMessageBox::information(this,"ERROR","用户已存在");
+        }else
+        {
+            QMessageBox::information(this,"ERROR","注册失败");
         }
+
     });
 
 
