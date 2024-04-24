@@ -9,6 +9,7 @@
 #include<QNetworkAccessManager>
 #include<QNetworkRequest>
 #include<QNetworkReply>
+#include"user.h"
 mainLogin::mainLogin(QWidget *parent)
     : QWidget{parent}
 {
@@ -81,6 +82,9 @@ void mainLogin::mylogin()
         if(code=="000")
         {
             //qDebug()<<"登录成功";
+            User* user=User::getUser();
+            user->setName(this->name->text());
+            user->setToken(obj.value("token").toString());
             emit successLogin();
         }else
         {

@@ -87,11 +87,7 @@ void regist::zhuce()
     QString USER_REG   = "^[a-zA-Z0-9_@#-\\*]\\{3,16\\}$";
     regexp.setPattern(USER_REG);
     bool bl = regexp.exactMatch(userName);
-//    if(bl == false)
-//    {
-//        QMessageBox::warning(this, "ERROR", "用户名格式不正确!");
-//        return;
-//    }
+
     if(passwd!=confirmPwd)
     {
         QMessageBox::information(this,"ERROR",QStringLiteral("两次输入密码不一致!"));
