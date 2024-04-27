@@ -2,6 +2,10 @@
 UploadFile::UploadFile(QWidget *parent)
     : QWidget{parent}
 {
+
+
+
+    qDebug()<<"=====";
     QVBoxLayout* mainlayout=new QVBoxLayout;
     this->setLayout(mainlayout);
     filePath=new QLineEdit;
@@ -24,14 +28,14 @@ UploadFile::UploadFile(QWidget *parent)
 
 void UploadFile::upload()
 {
+
     QNetworkAccessManager *networkManger=new QNetworkAccessManager(this);
     QNetworkRequest *head=new QNetworkRequest;
     QFileInfo info=QFileInfo(this->filePath->text());
 
     User *user=User::getUser();
-    user->setIp("192.168.10.129");
-    user->setPort("80");
-    user->setName("mzg");
+
+
     QString url = QString("http://%1:%2/upload").arg(user->getIp()).arg(user->getPort());
     head->setUrl(url);
     qDebug()<<url;
@@ -71,9 +75,6 @@ void UploadFile::uploadMd5()
 {
     User* user=User::getUser();
 
-    user->setIp("192.168.10.129");
-    user->setPort("80");
-    user->setName("mzg");
     QJsonObject obj;
     QFile file(filePath->text());
     QFileInfo info(filePath->text());

@@ -4,6 +4,7 @@ QT += widgets network
 SOURCES += \
     file.cpp \
     filelist.cpp \
+    filewid.cpp \
     login.cpp \
     main.cpp \
     mainlogin.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
 HEADERS += \
     file.h \
     filelist.h \
+    filewid.h \
     login.h \
     mainlogin.h \
     mainwidget.h \

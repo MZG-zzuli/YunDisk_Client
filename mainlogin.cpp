@@ -83,6 +83,8 @@ void mainLogin::mylogin()
         {
             //qDebug()<<"登录成功";
             User* user=User::getUser();
+            user->setIp(fu->sz->ip->text());
+            user->setPort(fu->sz->port->text());
             user->setName(this->name->text());
             user->setToken(obj.value("token").toString());
             emit successLogin();

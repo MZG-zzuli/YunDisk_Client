@@ -2,6 +2,7 @@
 #include "login.h"
 #include"mainwidget.h"
 #include"uploadfile.h"
+#include"filelist.h"
 #include<QApplication>
 #define TEST
 Login::Login(QWidget *parent)
@@ -61,10 +62,14 @@ Login::Login(QWidget *parent)
         stackWid->setCurrentIndex(dlid);
     });
     connect(dl,&mainLogin::successLogin,[this]{
+
         qDebug()<<"success login!";//跳转到新窗口，当前窗口关闭
-        UploadFile *upload=new UploadFile();
-        upload->show();
+//        UploadFile *upload=new UploadFile();
+//        upload->show();
+        fileList *filelist=new fileList(0);
+        filelist->show();
         this->hide();
+
     });
 
 }
